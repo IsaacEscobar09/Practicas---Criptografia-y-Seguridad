@@ -1,0 +1,109 @@
+\documentclass[12pt, letterpaper]{article} % Tamaño 12pt como en Practica1
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,mexico]{babel}
+\decimalpoint
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage[expansion=false]{microtype}
+\usepackage[hidelinks]{hyperref}
+
+
+%% --- Paquetes recomendados para código y diagramas ---
+\usepackage{xcolor}
+\usepackage{csquotes}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta, babel}
+
+%% --- Configuración de estilo para código fuente (listings) ---
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue!70}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red!70},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    showstringspaces=false
+}
+
+%% ------------------------------------------------------------------
+%%  Manejo de Bibliografía (Biber/BibLaTeX)
+%% ------------------------------------------------------------------
+\usepackage[style=ieee, backend=biber]{biblatex}
+\addbibresource{Referencias/Referencias.bib}
+
+%% ------------------------------------------------------------------
+%%  Márgenes
+%% ------------------------------------------------------------------
+\usepackage[top=2.5cm, bottom=2.5cm, left=2cm, right=2cm,
+            headsep=0.5cm, footskip=1cm]{geometry} % Márgenes de Practica1
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\bfseries Criptografía y Seguridad}
+\fancyhead[C]{\small Práctica 3: Into the MultiSSHverse}
+\fancyhead[R]{\small Facultad de Ciencias, UNAM}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%% ------------------------------------------------------------------
+%%  Entorno de respuesta
+%% ------------------------------------------------------------------
+\newenvironment{respuesta}
+  {\par\addvspace{0.7em}%
+   \begin{list}{}{%
+     \setlength{\leftmargin}{2.2em}%
+     \setlength{\rightmargin}{0pt}%
+     \setlength{\labelwidth}{0pt}%
+     \setlength{\labelsep}{0pt}%
+     \setlength{\itemindent}{0pt}%
+     \setlength{\listparindent}{0pt}%
+     \setlength{\topsep}{0pt}%
+     \setlength{\partopsep}{0pt}%
+     \setlength{\parsep}{\parskip}%
+   }\item[]%
+   \textbf{Respuesta.}\par\nobreak\addvspace{0.2em}\noindent\ignorespaces}
+  {\end{list}\addvspace{0.7em}}
+
+\setlist[enumerate,1]{label=\textbf{\arabic*.},
+                      leftmargin=1.7em, itemsep=1.4em, topsep=0.6em}
+
+\begin{document}
+
+\input{portada/portada.tex}
+
+\newpage
+\setcounter{page}{1}
+
+\input{introduccion/introduccion.tex}
+
+\input{desarrollo/desarrollo.tex}
+
+\section{Preguntas}
+\input{desarrollo/preguntas/pregunta1.tex}
+\input{desarrollo/preguntas/pregunta2.tex}
+\input{desarrollo/preguntas/pregunta3.tex}
+\input{desarrollo/preguntas/pregunta4.tex}
+\input{desarrollo/preguntas/pregunta5.tex}
+
+\input{conclusion/conclusion.tex}
+
+\newpage
+\nocite{*} 
+\printbibliography[title={Referencias}, heading=bibintoc]
+
+\end{document}
