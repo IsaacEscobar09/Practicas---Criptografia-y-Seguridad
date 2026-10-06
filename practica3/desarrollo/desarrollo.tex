@@ -36,6 +36,40 @@ Como se observa en los resultados, la herramienta analizó un total de 4096 dire
 
 
 \subsubsection{Velázquez Barrientos Vania Zoe}
+Primero usamos el comando \texttt{ip addr} para conocer la información 
+de nuestras interfaces de red, así como nuestra dirección MAC e IP asignada.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/ip_addr_vania.png}
+    \caption{Obtención de IP y submáscara utilizando el comando ip addr.}
+    \label{fig:ip_vania}
+\end{figure}
+
+Como se observa en la interfaz \texttt{eth0}, la dirección IP asignada es 
+\texttt{192.168.43.88} con una submáscara de red \texttt{/20} 
+(equivalente a \texttt{255.255.240.0}). Para obtener la dirección de red, 
+realizamos la operación lógica AND entre la dirección IP y la submáscara, 
+dando como resultado la dirección de red \texttt{192.168.32.0}.
+
+Una vez calculada la dirección de red, procedimos a realizar el escaneo 
+del segmento completo utilizando \texttt{nmap}:
+
+\begin{verbatim}
+nmap 192.168.32.0/20 -A -T4
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/nmap_vania.png}
+    \caption{Resultados del escaneo de la red local utilizando nmap en WSL.}
+    \label{fig:nmap_vania}
+\end{figure}
+
+Al igual que en el caso anterior, el entorno WSL opera en una red 
+virtualizada y aislada de los dispositivos físicos de la red doméstica, 
+por lo que el escaneo reportó únicamente la interfaz local activa.
+
 
 
 
