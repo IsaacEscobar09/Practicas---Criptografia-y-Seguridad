@@ -3,7 +3,9 @@
 Investiguen cómo podrían escalar privilegios desde una sesión remota. y cómo podrían usar el archivo /etc/shadow para encontrar las contraseñas de otros usuarios.
 
 \begin{respuesta}
+Para escalar privilegios desde una sesión remota un atacante buscaría binarios con permisos SUID usando el comando find / -perm -4000 2>/dev/null, revisaría la versión del kernel con uname -a para buscar exploits conocidos públicamente, y verificaría qué comandos puede ejecutar como root con sudo -l. El sitio GTFOBins documenta cómo explotar binarios comunes del sistema para obtener acceso root de formas inesperadas.
 
+El archivo /etc/shadow almacena los hashes de las contraseñas de todos los usuarios del sistema y únicamente root puede leerlo. Si un atacante lograra obtenerlo mediante escalada de privilegios, podría aplicar ataques de diccionario o fuerza bruta de forma completamente offline con herramientas como John the Ripper o hashcat. Estos ataques offline son mucho más rápidos que los ataques en línea porque no tienen límite de intentos ni latencia de red, lo que podría comprometer todas las cuentas del servidor.
 
     
 \end{respuesta}
