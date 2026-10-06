@@ -5,9 +5,9 @@ Imagina que tienes una IP 32.248.55.222/18. ¿Cuál es la dirección de red y cu
 \begin{respuesta}
 Con la máscara /18 los primeros 18 bits corresponden a la red y los 14 restantes a los hosts. Haciendo la operación AND bit a bit entre la IP y la máscara obtenemos:
 
-Dirección de red: 32.248.0.0
-Bits para hosts: 32 − 18 = 14 bits
-Hosts posibles: 2¹⁴ − 2 = 16,382 hosts
+Dirección de red: 32.248.0.0 \\
+Bits para hosts: $32 - 18 = 14$ bits \\
+Hosts posibles: $2^{14} - 2 = 16{,}382$ hosts
 
 Se restan 2 porque la primera dirección identifica la red y la última es broadcast.
 
