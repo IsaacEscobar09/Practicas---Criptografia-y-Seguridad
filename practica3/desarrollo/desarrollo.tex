@@ -2,9 +2,37 @@
 
 \subsection{Red Local}
 
+Durante esta parte, cada integrante del equipo analizó su propia red local. El objetivo fue identificar la dirección IP, calcular la dirección de red a partir de la submáscara y ejecutar un escaneo de puertos e inferencia de sistemas operativos.
+
 \subsubsection{Escobar González Isaac Giovani}
 
+Primero usamos el comando \texttt{ip addr} para conocer la información de nuestras interfaces de red, así como nuestra dirección MAC e IP asignada.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/ip_addr_isaac.png}
+    \caption{Obtención de IP y submáscara utilizando el comando ip addr.}
+    \label{fig:ip_isaac}
+\end{figure}
+
+Como se observa en la interfaz \texttt{eth0}, la dirección IP asignada es \texttt{172.18.190.46} con una submáscara de red \texttt{/20} (equivalente a \texttt{255.255.240.0}). 
+
+Para obtener la dirección de red, realizamos la operación lógica AND entre la dirección IP y la submáscara, dando como resultado la dirección de red \texttt{172.18.176.0}.
+
+Una vez calculada la dirección de red, procedimos a realizar el escaneo del segmento completo utilizando la herramienta \texttt{nmap} con las banderas de agresividad (\texttt{-A}) y control de tiempo (\texttt{-T4}) indicadas. Ejecutamos el siguiente comando:
+
+\begin{verbatim}
+nmap 172.18.176.0/20 -A -T4
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/nmap_isaac.png}
+    \caption{Resultados del escaneo de la red local utilizando nmap en el entorno WSL.}
+    \label{fig:nmap_isaac}
+\end{figure}
+
+Como se observa en los resultados, la herramienta analizó un total de 4096 direcciones IP en aproximadamente 63.62 segundos, encontrando únicamente un host activo que corresponde a mi propia interfaz (\texttt{172.18.190.46}). Además, los 1000 puertos escaneados se reportaron en estados ignorados o cerrados (\textit{conn-refused}). Esto confirma que el subsistema WSL opera en una red virtualizada y aislada, separada de los dispositivos físicos de la red doméstica.
 
 
 \subsubsection{Velázquez Barrientos Vania Zoe}
@@ -13,10 +41,196 @@
 
 \subsection{Red Objetivo}
 
+Para esta siguiente fase de la práctica, el enfoque cambió de la red local al servidor objetivo proporcionado en la práctica, ubicado en la dirección IP \texttt{18.219.229.216}.
 
+El primer paso consistió en realizar un escaneo utilizando \texttt{nmap} con la opción \texttt{-vvv} (verbose a su máximo nivel) para obtener la mayor cantidad de información posible sobre el estado del objetivo.
+
+\begin{verbatim}
+nmap -vvv 18.219.229.216
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/nmap.png}
+    \caption{Intento de escaneo al servidor objetivo con bloqueo de ICMP (ping).}
+    \label{fig:nmap_objetivo_fail}
+\end{figure}
+
+Como se observa en los resultados, \texttt{nmap} determinó que el host parecía estar inactivo (\textit{Host seems down}). La herramienta misma sugiere utilizar la bandera \texttt{-Pn} para omitir la fase de descubrimiento por ping y forzar el escaneo de puertos.
+
+Procedemos a agregar la bandera \texttt{-Pn} para evadir la restricción del firewall.
+
+\begin{verbatim}
+nmap -vvv -Pn 18.219.229.216
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/nmap1.png}
+    \caption{Escaneo exitoso omitiendo el descubrimiento de host (-Pn).}
+    \label{fig:nmap_objetivo_pn}
+\end{figure}
+
+Al forzar el escaneo, detectamos que el \textbf{puerto 22} se encontraba abierto, corriendo el servicio \textbf{ssh}. Para cumplir con el requerimiento de inferir el sistema operativo y conocer la versión exacta del servicio, lanzamos un escaneo dirigido específicamente a este puerto con la bandera \texttt{-sV}.
+
+\begin{verbatim}
+nmap -p 22 -sV -Pn 18.219.229.216
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/nmap2.png}
+    \caption{Detección de versión del servicio SSH en el puerto 22.}
+    \label{fig:nmap_objetivo_sv}
+\end{figure}
+
+El escaneo reveló que el servidor utiliza \textbf{OpenSSH 9.9 (protocol 2.0)}. Para confirmar el sistema operativo, utilizamos las credenciales interceptadas del usuario \texttt{amongus} con contraseña \texttt{SuGnoma} proporcionadas en las instrucciones.
+
+\begin{verbatim}
+ssh amongus@18.219.229.216
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/ssh.png}
+    \caption{Acceso SSH con usuario interceptado confirmando el sistema operativo.}
+    \label{fig:ssh_amongus}
+\end{figure}
+
+Al iniciar sesión, el banner de bienvenida del servidor nos confirmó explícitamente que el sistema operativo utilizado es \textbf{Amazon Linux 2023}.
+
+\subsection{Depuración}
+
+Antes de lanzar el ataque de fuerza bruta, era indispensable reducir el diccionario \\ \texttt{hashmob.net\_2025.large.found} que contenía millones de contraseñas. Siguiendo las instrucciones, nos comunicamos con el Comando Central mediante correo para solicitar ayuda y simplificar las contraseñas. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/pista.png}
+    \caption{Pista codificada en hexadecimal recibida por el Comando Central.}
+    \label{fig:pista_correo}
+\end{figure}
+
+El mensaje recibido contenía una cadena en formato hexadecimal que, al ser decodificada, indicaba que la contraseña de nuestro equipo contenía la palabra ``\texttt{arm}''. Con esta información crítica, utilizamos comandos de UNIX para depurar el diccionario.
+
+\begin{verbatim}
+cat hashmob.net_2025.large.found | grep "arm" > filtracion.dic
+wc -l filtracion.dic
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/grep.png}
+    \caption{Filtrado del diccionario original utilizando el comando grep y conteo de líneas.}
+    \label{fig:grep_diccionario}
+\end{figure}
+
+Gracias al comando \texttt{grep}, logramos extraer únicamente las contraseñas que contenían el patrón ``\texttt{arm}'', guardándolas en un nuevo archivo llamado \texttt{filtracion.dic}. Posteriormente, con \texttt{wc -l} confirmamos que la carga de trabajo se redujo masivamente a solo \textbf{96,326 intentos}.
+
+Para optimizar el ataque en equipo, dividimos este nuevo archivo en partes iguales utilizando el comando \texttt{split}. Como nuestro equipo consta de 3 integrantes (en teoria), dividimos las líneas entre 3.
+
+\begin{verbatim}
+split -l 32109 filtracion.dic diccionario_
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/split.png}
+    \caption{División del diccionario depurado para trabajo distribuido en equipo.}
+    \label{fig:split_diccionario}
+\end{figure}
 
 \subsection{Ataque}
 
+Con los diccionarios fragmentados y depurados, procedimos a realizar el ataque de fuerza bruta por diccionario utilizando la herramienta \texttt{hydra}. 
+
+En un primer intento, se lanzó la herramienta sin especificar un límite de hilos, lo que generó una advertencia por parte del programa recomendando reducir las tareas paralelas a 4 para no saturar la configuración SSH del servidor.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/hydra.png}
+    \caption{Inicio del ataque con Hydra y advertencia de límite de tareas simultáneas.}
+    \label{fig:hydra_warning}
+\end{figure}
+
+Atendiendo a esta advertencia técnica y para asegurar una conexión estable, distribuimos las partes del diccionario (\texttt{\_aa}, \texttt{\_ab}, \texttt{\_ac}) entre los miembros del equipo y ejecutamos \texttt{hydra} incluyendo explícitamente la bandera \texttt{-t 4}.
+
+\begin{verbatim}
+hydra -l purple -P diccionario_ab ssh://18.219.229.216 -t 4
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/hydra2.png}
+    \caption{Computadora 1.}
+    \label{fig:hydra_distribuido}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/hydra3.png}
+    \caption{Computadora 2.}
+    \label{fig:hydra_distribuido2}
+\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=1\textwidth]{Imagenes/hydra4.png}
+%     \caption{Computadora 3.}
+%     \label{fig:hydra_distribuido3}
+% \end{figure}
 
 
-\subsection{Depuración}
+Debido a interrupciones por bloqueos temporales del firewall de Amazon Web Services, tuvimos que utilizar la bandera \texttt{-R} (Restore) de Hydra para reanudar el ataque desde el punto exacto donde se había detenido, evitando así empezar desde cero y perder el progreso.
+
+\begin{verbatim}
+hydra -R
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/exito.png}
+    \caption{Reanudación exitosa del ataque y hallazgo de la contraseña correcta.}
+    \label{fig:hydra_success}
+\end{figure}
+
+Como se observa en la consola, la herramienta logró concluir el ataque con éxito. Se descubrió que la contraseña asignada para nuestro usuario \textbf{\texttt{purple}} (Equipo 11) es \textbf{\texttt{kazarma}}.
+
+\subsection{Dentro de la red}
+
+Una vez obtenida la contraseña mediante el ataque de fuerza bruta, procedimos a ingresar al servidor objetivo utilizando el protocolo SSH con nuestro usuario asignado (\texttt{purple}).
+
+\begin{verbatim}
+ssh purple@18.219.229.216
+\end{verbatim}
+
+Y después ingresamos la contraseña descubierta.
+
+\begin{verbatim}
+kazarma
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/acceso.png}
+    \caption{Acceso exitoso al servidor objetivo con el usuario purple.}
+    \label{fig:ssh_purple}
+\end{figure}
+
+Al ingresar correctamente con la contraseña descubierta, el servidor nos mostró el banner de bienvenida de Amazon Linux 2023, confirmando nuestro acceso a la terminal del sistema.
+
+Posteriormente, procedimos a cumplir con el último requerimiento práctico, el cual consistía en dejar una huella que identificara a nuestro equipo dentro del servidor. Para ello, utilizamos la herramienta sugerida \texttt{toilet} para generar un texto en formato ASCII con el nombre "Equipo 11" y redirigimos la salida hacia un archivo de texto llamado \texttt{huella.txt}. Finalmente, utilizamos el comando \texttt{cat} para verificar el contenido del archivo.
+
+\begin{verbatim}
+toilet "Equipo 11" > huella.txt
+ls
+cat huella.txt
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Imagenes/huella.png}
+    \caption{Creación y verificación de la huella del Equipo 11 utilizando la herramienta toilet.}
+    \label{fig:huella_equipo}
+\end{figure}
+
+Como se observa en la consola, la marca del Equipo 11 se generó y guardó con éxito. 
