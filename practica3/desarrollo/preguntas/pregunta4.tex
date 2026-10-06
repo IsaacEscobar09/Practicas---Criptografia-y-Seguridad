@@ -3,7 +3,10 @@
 ¿Qué políticas de seguridad podrían implementar en general para poder hacer este servidor mucho más seguro? Menciona al menos 3.
 
 \begin{respuesta}
-
+1.-Deshabilitar autenticación por contraseña en SSH y usar exclusivamente llaves asimétricas. De esta forma un ataque de diccionario no sirve de nada porque el servidor no acepta contraseñas en absoluto.
+2.-Implementar fail2ban, herramienta que bloquea automáticamente la IP de cualquier cliente que falle demasiados intentos de autenticación en poco tiempo, haciendo los ataques de diccionario extremadamente lentos e ineficientes.
+3.-Cambiar el puerto SSH del 22 a uno no estándar, por ejemplo 2222 o 5522, para evitar escaneos automatizados que buscan específicamente el puerto 22.
+4.-Usar contraseñas largas y completamente aleatorias que no aparezcan en ningún diccionario conocido, combinando mayúsculas, minúsculas, números y símbolos especiales.
 
     
 \end{respuesta}
