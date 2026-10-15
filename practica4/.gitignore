@@ -1,0 +1,21 @@
+# Archivos temporales de LaTeX y compilación
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lot
+*.lof
+*.nav
+*.snm
+*.vrb
+*.pdf
+# Omitir la carpeta temporal si se usa algún entorno virtual
+.vscode/
+.DS_Store
