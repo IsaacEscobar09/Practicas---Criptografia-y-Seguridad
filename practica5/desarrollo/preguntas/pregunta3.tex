@@ -3,5 +3,5 @@
 ¿Por qué la ACL en el R\_03 debe ser exactamente la inversa de la del R\_01? ¿Qué sucedería con el túnel si en ambos routers configuramos la ACL permitiendo el tráfico desde 172.16.1.0 hacia 172.16.3.0?
 
 \begin{respuesta}
-    
+Debemos considerar que las ACL en una VPN IPsec definen el tráfico que debe ser cifrado y enviado a través del túnel. La ACL en R\_01 define el tráfico que se origina de su red local (172.16.1.0) con destino a la red remota (172.16.3.0). Por lo tanto, la ACL en R\_03 debe ser la inversa, es decir, definir el tráfico que se origina de su red local (172.16.3.0) con destino a la red remota (172.16.1.0). Si se configuraran ACLs idénticas en ambos routers, el tráfico de regreso desde la red de R\_03 hacia la red de R\_01 no tendría una política que lo considere ``interesante'' para cifrar, provocando que los paquetes de respuesta no sean enviados a través del túnel y, por ende, la comunicación bidireccional fallaría. Esto se debe a que las políticas de seguridad (proxy ACLs) no coincidirían, impidiendo que el túnel funcione correctamente.
 \end{respuesta}

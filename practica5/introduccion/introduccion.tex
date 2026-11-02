@@ -1,2 +1,11 @@
 \section{Introducción}
 
+El objetivo principal de esta práctica es establecer una comunicación segura entre dos Redes de Área Local (LAN) separadas por un router que simula la red pública de Internet. Para lograrlo, se configurarán los gateways (routers Cisco) estableciendo un túnel VPN en ``Modo Túnel''. En este modo, el paquete IP original se encapsula por completo dentro de un nuevo paquete protegido por el protocolo ESP (Encapsulating Security Payload).
+
+La construcción de este túnel consiste en dos etapas fundamentales:
+\begin{itemize}
+    \item \textbf{Fase 1 (Túnel de Gestión - ISAKMP):} Autentica la identidad de los extremos (mediante claves pre-compartidas) y establece un canal seguro para la gestión utilizando el intercambio de claves Diffie-Hellman.
+    \item \textbf{Fase 2 (Túnel de Datos - IPsec SA):} Define cómo se protegerán los datos reales de los usuarios, acordando el uso de algoritmos robustos de cifrado (como AES-256) y de hashing (como SHA) para garantizar la confidencialidad y la integridad.
+\end{itemize}
+
+A lo largo del desarrollo de este reporte, se verificará el comportamiento del tráfico mediante la captura de paquetes antes y después de la implementación de la política criptográfica, comprobando empíricamente cómo la información transita de ser texto claro vulnerable a un flujo encapsulado y cifrado.

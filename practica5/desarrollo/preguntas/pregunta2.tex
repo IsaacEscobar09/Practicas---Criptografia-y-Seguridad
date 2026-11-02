@@ -3,5 +3,5 @@
 Al observar los paquetes capturados por el sniffer con la VPN activa, ¿son visibles las direcciones IP privadas de las Laptops (172.16.x.x)? Explica por qué esto es una ventaja de seguridad frente a un ataque de interpretación en la red pública.
 
 \begin{respuesta}
-    
+    \textbf{NO}, pues tenemos que las direcciones IP privadas de las Laptops (172.16.x.x) ya no son visibles en el sniffer. Los únicos direccionamientos que viajan en texto claro son las direcciones IP públicas de los routers extremos (como el 100.100.100.1 y 100.100.200.1). Esto es una ventaja de seguridad crítica porque oculta por completo la topología interna de la red (comunicación directa host a host). Un atacante posicionado en la red pública que intercepte el tráfico no solo será incapaz de leer el mensaje, sino que tampoco podrá mapear la infraestructura, identificar cuántos dispositivos hay detrás del router, ni conocer el esquema de direccionamiento privado de la organización.
 \end{respuesta}

@@ -3,5 +3,5 @@
 Antes de configurar la VPN, el sniffer mostraba protocolo ICMP. Tras activar la VPN, el protocolo cambia a ESP (Protocolo 50). ¿Qué sucedió con la cabecera ICMP original y en qué parte del nuevo paquete se encuentra ahora?
 
 \begin{respuesta}
-    
+    La cabecera ICMP original fue cifrada y ahora se encuentra dentro de la carga útil del paquete ESP. Ya que IPsec se implementó en ``Modo Túnel'', es decir, el paquete original completo (cabecera ICMP y cabecera IP privada) fue encapsulado dentro de un nuevo paquete IP externo que contiene las direcciones IP públicas de los routers extremos del túnel. Haciendo que el sniffer ya no pueda ver la cabecera ICMP original, sino únicamente la cabecera del paquete ESP que viaja por la red pública.
 \end{respuesta}
