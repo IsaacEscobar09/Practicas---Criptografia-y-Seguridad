@@ -1,2 +1,26 @@
 \section{Conclusión}
 
+En esta práctica vimos cómo funciona IPsec y cómo se usa para armar una VPN
+entre dos redes que están conectadas por un internet que no es seguro. Primero
+comprobamos que, sin VPN, el sniffer ve los pings (ICMP) tal cual, con
+direcciones y todo, lo que muestra lo fácil que es espiar una comunicación que
+no va protegida.
+
+Después configuramos la VPN en los routers R\_01 y R\_03 y entendimos que el
+proceso tiene dos fases: en la Fase 1 se crea un canal seguro para ponerse de
+acuerdo (ISAKMP), y en la Fase 2 se crea el túnel por donde realmente viajan los
+datos cifrados (IPsec). También vimos que la configuración tiene que coincidir en
+los dos extremos (cifrado, hash, grupo Diffie-Hellman y llave compartida) o el
+túnel no se levanta. Ya con la VPN activa, el sniffer solo mostró paquetes ESP,
+así que el contenido y las IPs privadas de las laptops quedaron ocultos.
+
+Con las preguntas aprendimos cosas importantes: que conviene cambiar las llaves
+seguido para no darle tiempo a un atacante, que los grupos Diffie-Hellman viejos
+(2 y 5) ya no son seguros y hay que pasarse al 14 o mejor a curvas elípticas, y
+que Perfect Forward Secrecy protege lo que ya se mandó aunque en el futuro
+roben una llave.
+
+En resumen, una VPN con IPsec nos da confidencialidad, integridad y autenticidad,
+y sirve para conectar sedes sin que nadie en el camino pueda ver lo que se
+manda. Pero no basta con activarla: hay que elegir bien los parámetros para que
+de verdad sea segura.
