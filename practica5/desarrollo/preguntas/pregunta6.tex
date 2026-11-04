@@ -1,7 +1,25 @@
 \subsection{Pregunta 6}
 
-En la configuración del Crypto Map incluyeron el comando set pfs group5. Investiga qué significa Perfect Forward Secrecy y cómo protege las comunicaciones pasadas en caso de que un atacante logre robar la llave privada de uno de los routers en el futuro.
+En la configuración del Crypto Map incluyeron el comando \texttt{set pfs group5}. Investiga qué significa Perfect Forward Secrecy y cómo protege las comunicaciones pasadas en caso de que un atacante logre robar la llave privada de uno de los routers en el futuro.
 
 \begin{respuesta}
-    
+\textbf{Perfect Forward Secrecy (PFS)} quiere decir que cada vez que se crea una
+llave nueva para cifrar datos, se hace un intercambio de Diffie-Hellman nuevo,
+sin depender de las llaves anteriores. Así, cada llave de sesión es
+independiente de las demás.
+
+\textbf{Sin PFS}, las llaves de datos salen de la llave de la Fase 1. Entonces,
+si un atacante se guarda todo el tráfico cifrado durante meses y un día roba esa
+llave, puede abrir todo lo que guardó, porque todas las llaves salen de la misma
+fuente.
+
+\textbf{Con PFS}, cada llave sale de un intercambio DH nuevo y los valores
+temporales se borran al terminar, así que no hay forma de reconstruirlas después.
+Aunque el atacante robe la llave privada del router en el futuro, \textbf{no
+puede descifrar el tráfico viejo que ya guardó}.
+
+Es como cambiar la chapa de tu casa todos los días y tirar la llave vieja: si un
+ladrón consigue la llave de hoy, no le sirve para abrir lo de ayer. Por eso
+ponemos \texttt{set pfs group5} en el crypto map, para que lo que ya se mandó
+siga protegido aunque algo falle más adelante.
 \end{respuesta}
