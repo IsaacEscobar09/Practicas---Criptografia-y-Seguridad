@@ -3,5 +3,26 @@
 En la política ISAKMP definieron un lifetime de 86400 segundos. ¿Cuál es el riesgo de seguridad de configurar un tiempo de vida extremadamente largo (por ejemplo, varios días) para las llaves de sesión?
 
 \begin{respuesta}
+El lifetime es básicamente el tiempo que dura una llave antes de que los routers
+tengan que cambiarla por una nueva. Los 86400 segundos que usamos son 24 horas,
+o sea, un día completo.
+
+El problema de poner un tiempo larguísimo (varios días) es que usamos la misma
+llave durante demasiado tiempo. Esto trae varios riesgos:
+
+\begin{itemize}
+    \item \textbf{Más daño si la llave se roba:} si un atacante consigue la llave,
+    puede leer \emph{todo} lo que se mandó con ella. Mientras más dura la llave,
+    más información queda expuesta.
+    \item \textbf{Más material para atacar:} mientras más tráfico se cifre con la
+    misma llave, más datos tiene el atacante para intentar romperla con
+    criptoanálisis.
+    \item \textbf{La llave robada sigue sirviendo mucho tiempo:} si alguien la
+    obtiene, la puede usar por días antes de que se cambie sola.
+\end{itemize}
+
+Es como usar la misma contraseña durante años: si alguna vez se filtra, el
+problema dura muchísimo. Cambiar las llaves seguido hace que, aunque roben una,
+solo se enteren de un pedacito de la comunicación.
     
 \end{respuesta}
