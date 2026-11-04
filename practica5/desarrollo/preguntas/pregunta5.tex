@@ -3,5 +3,33 @@
 Utilizaron el Grupo 5 de Diffie-Hellman. Investiga por qué hoy en día organizaciones como la NSA o el NIST recomiendan dejar de usar los grupos 2 y 5, y qué grupos (números) se consideran seguros para estándares de cifrado modernos.
 
 \begin{respuesta}
-    
+El grupo de Diffie-Hellman define qué tan grandes son los números que se usan
+para generar la llave, y de eso depende qué tan difícil es romperla. Los grupos
+2 y 5 ya se quedaron cortos:
+
+\begin{itemize}
+    \item El \textbf{grupo 2} usa números de 1024 bits y el \textbf{grupo 5} de
+    1536 bits. Antes alcanzaba, pero hoy las computadoras son mucho más
+    potentes y los ataques son mejores.
+    \item En 2015 salió el ataque \textbf{Logjam}, que demostró que los grupos
+    de 1024 bits se pueden romper si alguien tiene mucho poder de cómputo (como
+    un gobierno). Como además mucha gente usa los mismos números primos
+    estándar, el atacante hace el trabajo pesado una sola vez y lo reutiliza
+    para espiar un montón de conexiones.
+    \item Por eso el NIST y la NSA recomiendan dejarlos y usar grupos más
+    grandes o los de curvas elípticas, que son más fuertes con llaves más
+    chicas.
+\end{itemize}
+
+Los grupos que hoy se consideran seguros son:
+
+\begin{itemize}
+    \item \textbf{Grupo 14} (2048 bits): es el mínimo aceptable hoy.
+    \item \textbf{Grupos 15 y 16} (3072 y 4096 bits): más fuertes.
+    \item \textbf{Grupos 19, 20 y 21} (curvas elípticas de 256, 384 y 521 bits):
+    los más recomendados ahorita. El 20 es el que pide la NSA en su suite CNSA.
+\end{itemize}
+
+En la práctica funcionó el grupo 5 porque es una simulación, pero en una red
+real habría que usar mínimo el 14, y de preferencia el 19 o el 20.
 \end{respuesta}
